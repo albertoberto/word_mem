@@ -23,28 +23,6 @@ RSpec.describe WordMem::CLI do
     cli.clear_db
   end
 
-  describe '#add' do
-    subject(:method_call) { cli.add(expression) }
-
-    context 'with a non-empty empty expression database' do
-      before do
-        cli.add('word_that_was_already_there')
-      end
-
-      it "adds an expression to the project's expression database" do
-        method_call
-        expect(test_db_content.lines.length).to eq(2)
-      end
-    end
-
-    context 'with an empty expression database' do
-      it "adds an expression to the project's expression database" do
-        method_call
-        expect(test_db_content.lines.length).to eq(1)
-      end
-    end
-  end
-
   describe '#clear_db' do
     subject(:method_call) { cli.clear_db }
 
@@ -63,6 +41,104 @@ RSpec.describe WordMem::CLI do
       it "removes all expressions from the project's expression database" do
         method_call
         expect(test_db_content.lines.length).to eq(0)
+      end
+    end
+  end
+
+  describe '#add' do
+    subject(:method_call) { cli.add(expression) }
+
+    context 'with a non-empty expression database' do
+      before do
+        cli.add('word_that_was_already_there')
+      end
+
+      it "adds an expression to the project's expression database" do
+        method_call
+        expect(test_db_content.lines.length).to eq(2)
+      end
+
+      context 'with multiple words to be added' do
+        subject(:method_call) { cli.add('dummy1', 'dummy2') }
+
+        it "adds all expressions to the project's expression database" do
+          method_call
+          expect(test_db_content.lines.length).to eq(3)
+        end
+      end
+    end
+
+    context 'with an empty expression database' do
+      it "adds an expression to the project's expression database" do
+        method_call
+        expect(test_db_content.lines.length).to eq(1)
+      end
+
+      context 'with multiple words to be added' do
+        subject(:method_call) { cli.add('dummy1', 'dummy2') }
+
+        it "adds all expressions to the project's expression database" do
+          method_call
+          expect(test_db_content.lines.length).to eq(2)
+        end
+      end
+    end
+  end
+
+  describe '#remove' do
+    subject(:method_call) { cli.remove(expression) }
+
+    context 'with a non-empty expression database' do
+      context 'with one word to be removed' do
+        let(:expression) { 'dummy' }
+
+        before do
+          described_class.new.add(expression)
+        end
+
+        it "removes an expression from the project's expression database" do
+          method_call
+          expect(test_db_content.lines.length).to eq(0)
+        end
+      end
+
+      context 'with multiple words to be removed' do
+        subject(:method_call) { cli.remove('dummy1', 'dummy2') }
+
+        before do
+          described_class.new.add('dummy1', 'dummy2')
+        end
+
+        it "removes all expressions from the project's expression database" do
+          method_call
+          expect(test_db_content.lines.length).to eq(0)
+        end
+      end
+    end
+
+    context 'with an empty expression database' do
+      context 'with one word to be removed' do
+        it "doesn't change anything" do
+          method_call
+          expect(test_db_content.lines.length).to eq(0)
+        end
+
+        it "doesn't raise any error" do
+          expect { method_call }.not_to raise_error
+        end
+      end
+
+      context 'with multiple words to be removed' do
+        subject(:method_call) { cli.remove('dummy1', 'dummy2') }
+
+        it "doesn't change anything" do
+          method_call
+          expect(test_db_content.lines.length).to eq(0)
+        end
+
+        it "doesn't raise any error" do
+          expect { method_call }.not_to raise_error
+        end
       end
     end
   end
