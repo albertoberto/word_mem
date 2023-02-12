@@ -35,10 +35,13 @@ module WordMem
     desc 'remove EXPRESSION', 'remove EXPRESSION from the database'
     # Removes the row for +expression+ from the project's expression database
     #  file
-    def remove(expression)
-      return unless db.contains?(expression)
+    def remove(*expressions)
+      expressions.each do |expression|
+        next unless db.contains?(expression)
 
-      db.remove(expression)
+        db.remove(expression)
+      end
+
       db.persist
     end
 
