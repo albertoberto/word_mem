@@ -15,11 +15,13 @@ module WordMem
     end
 
     desc 'clear_db', 'remove all elements from the database'
+    # @see WordMem::Database#clear
     def clear_db
       db.clear
     end
 
     desc 'add EXPRESSION', 'add EXPRESSION to the database'
+    # Appends a row for +expression+ to the project's expression database file
     def add(expression)
       return if db.contains?(expression)
 
@@ -28,6 +30,8 @@ module WordMem
     end
 
     desc 'remove EXPRESSION', 'remove EXPRESSION from the database'
+    # Removes the row for +expression+ from the project's expression database
+    #  file
     def remove(expression)
       return unless db.contains?(expression)
 
@@ -37,6 +41,7 @@ module WordMem
 
     private
 
+    # @return [WordMem::Database] Class instance
     def db
       @db ||= WordMem::Database.new
     end

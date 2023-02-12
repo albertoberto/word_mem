@@ -1,5 +1,7 @@
 *.gem
 *.rbc
 /.config
-/Gemfile.lock
 /.vscode
+/.yardoc
+/doc/
+/Gemfile.lock

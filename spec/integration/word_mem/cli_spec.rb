@@ -26,19 +26,19 @@ RSpec.describe WordMem::CLI do
   describe '#add' do
     subject(:method_call) { cli.add(expression) }
 
-    context 'with a non-empty empty Word Database' do
+    context 'with a non-empty empty expression database' do
       before do
         cli.add('word_that_was_already_there')
       end
 
-      it "adds an expression to the project's Word Database" do
+      it "adds an expression to the project's expression database" do
         method_call
         expect(test_db_content.lines.length).to eq(2)
       end
     end
 
-    context 'with an empty Word Database' do
-      it "adds an expression to the project's Word Database" do
+    context 'with an empty expression database' do
+      it "adds an expression to the project's expression database" do
         method_call
         expect(test_db_content.lines.length).to eq(1)
       end
@@ -48,19 +48,19 @@ RSpec.describe WordMem::CLI do
   describe '#clear_db' do
     subject(:method_call) { cli.clear_db }
 
-    context 'with a non-empty Word Database' do
+    context 'with a non-empty expression database' do
       before do
         cli.add(expression)
       end
 
-      it "removes all expressions from the project's Word Database" do
+      it "removes all expressions from the project's expression database" do
         method_call
         expect(test_db_content.lines.length).to eq(0)
       end
     end
 
-    context 'with an empty Word Database' do
-      it "removes all expressions from the project's Word Database" do
+    context 'with an empty expression database' do
+      it "removes all expressions from the project's expression database" do
         method_call
         expect(test_db_content.lines.length).to eq(0)
       end
