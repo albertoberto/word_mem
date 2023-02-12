@@ -19,7 +19,7 @@ module WordMem
 
     # @return [Array] The database row for +@expression+
     # @example: ['word', 0, 0, 0, 0]
-    def to_row
+    def to_array
       [expression, reviews_b2t, reviews_t2b, score_b2t, score_t2b]
     end
   end

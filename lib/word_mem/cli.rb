@@ -22,10 +22,13 @@ module WordMem
 
     desc 'add EXPRESSION', 'add EXPRESSION to the database'
     # Appends a row for +expression+ to the project's expression database file
-    def add(expression)
-      return if db.contains?(expression)
+    def add(*expressions)
+      expressions.each do |expression|
+        next if db.contains?(expression)
 
-      db.append(WordMem::DatabaseElement.new(expression).to_row)
+        db.append(WordMem::DatabaseElement.new(expression))
+      end
+
       db.persist
     end
 

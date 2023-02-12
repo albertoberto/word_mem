@@ -17,9 +17,15 @@ module WordMem
     end
 
     # Appends +db_element+ to the +@elements+ array
-    # @param [Array] db_element The row to be appended
+    # @param [WordMem::DatabaseElement] db_element The element to be appended
     def append(db_element)
-      elements << db_element
+      elements << [
+        db_element.expression,
+        db_element.reviews_b2t,
+        db_element.reviews_t2b,
+        db_element.score_b2t,
+        db_element.score_t2b
+      ]
     end
 
     # Removes the row for +expression+ from the expression database
