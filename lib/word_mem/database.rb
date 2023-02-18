@@ -41,6 +41,21 @@ module WordMem
       expressions.include?(expression)
     end
 
+    # @return [Array<Array>] All rows of the expression database
+    # @example
+    #   [
+    #      ['word', 0, 0, 0, 0],
+    #      ['a sentence', 1, 0, 4, 0],
+    #      ['another word', 2, 1, 4, 1]
+    #   ]
+    def elements
+      return @elements if @elements
+
+      @elements = []
+      CSV.foreach(DB_FILE) { |db_element| @elements << db_element }
+      @elements
+    end
+
     # Removes all elements from the project's expression database .csv file
     def clear
       CSV.open(DB_FILE, 'w') { |csv| csv }
@@ -59,21 +74,6 @@ module WordMem
     # @example: ['word', 'a sentence', 'another word']
     def expressions
       @expressions ||= elements.empty? ? [] : elements.map(&:first)
-    end
-
-    # @return [Array<Array>] All rows of the expression database
-    # @example
-    #   [
-    #      ['word', 0, 0, 0, 0],
-    #      ['a sentence', 1, 0, 4, 0],
-    #      ['another word', 2, 1, 4, 1]
-    #   ]
-    def elements
-      return @elements if @elements
-
-      @elements = []
-      CSV.foreach(DB_FILE) { |db_element| @elements << db_element }
-      @elements
     end
 
     # @return [nil] If the project's expression database file is at
