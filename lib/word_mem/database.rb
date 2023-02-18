@@ -7,6 +7,12 @@ require_relative '../word_mem'
 
 module WordMem
   # Class that models the project's expression database
+  # @example An expression database
+  #   [
+  #      ['word', 0, 0, 0, 0],
+  #      ['a sentence', 1, 0, 4, 0],
+  #      ['another word', 2, 1, 4, 1]
+  #   ]
   class Database
     # The absolute path to the project's expression database
     DB_FILE = File.join(WordMem::PROJECT_ROOT, 'db', 'db.csv').freeze
@@ -42,12 +48,6 @@ module WordMem
     end
 
     # @return [Array<Array>] All rows of the expression database
-    # @example
-    #   [
-    #      ['word', 0, 0, 0, 0],
-    #      ['a sentence', 1, 0, 4, 0],
-    #      ['another word', 2, 1, 4, 1]
-    #   ]
     def elements
       return @elements if @elements
 
