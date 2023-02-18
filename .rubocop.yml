@@ -8,3 +8,6 @@ Layout/EndOfLine:
   EnforcedStyle: lf # Windows
 Layout/LineLength:
   Max: 120
+Metrics/ParameterLists:
+  Max: 5
+  MaxOptionalParameters: 5
