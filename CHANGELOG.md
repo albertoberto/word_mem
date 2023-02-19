@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.1.0] - 2023-02-19
+
 ### Added
 - Expression database management feature, to manage the database containing all
   expressions that are going to be reviewed
