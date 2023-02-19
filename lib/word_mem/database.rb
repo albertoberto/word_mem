@@ -37,7 +37,38 @@ module WordMem
     # Removes the row for +expression+ from the expression database
     # @param [String] expression The expression to be remvoed
     def remove(expression)
-      elements.reject! { |db_element| db_element.first == expression }
+      elements.reject! { |db_element| db_element.expression == expression }
+    end
+
+    # Increases the review number of +expression+ by +amount+
+    # @param [String] expression The expression whose review number increases
+    # @param [Symbol] direction direction Either :b2t (base_language to target_language),
+    #   or t2b (target_language to base_language)
+    # @param [Integer] amount The amount by which the review number increases
+    def increase_review_number_of(expression, direction, amount = 1)
+      expression = elements.find { |element| element.expression == expression }
+
+      if direction == :b2t
+        expression.reviews_b2t = (expression.reviews_b2t.to_i + amount).to_s
+      else
+        expression.reviews_t2b = (expression.reviews_t2b.to_i + amount).to_s
+      end
+    end
+
+    # Updates the score of +expression+ by +new_score+
+    # @param [String] expression The expression whose review number increases
+    # @param [Symbol] direction direction Either :b2t (base_language to target_language),
+    #   or t2b (target_language to base_language)
+    # @param [Integer] new_score The latest score, used to update the
+    #   expression's score
+    def update_score_of(expression, direction, new_score)
+      expression = elements.find { |element| element.expression == expression }
+
+      if direction == :b2t
+        expression.score_b2t = new_score_b2t_of(expression, new_score)
+      else
+        expression.score_t2b = new_score_t2b_of(expression, new_score)
+      end
     end
 
     # @param [String] expression The expression to be removed
@@ -75,6 +106,26 @@ module WordMem
     end
 
     private
+
+    # Computes the new b2t score of +expression+, given +new_score+
+    # @param [String] expression The expression whose review number increases
+    # @param [Integer] new_score The latest score, used to update the
+    #   expression's score
+    def new_score_b2t_of(expression, new_score)
+      old_cumulative_score = (expression.score_b2t.to_f * (expression.reviews_b2t.to_f - 1))
+      updated_cumulative_score = (old_cumulative_score + new_score).to_f
+      (updated_cumulative_score / expression.reviews_b2t.to_f).round(2).to_s
+    end
+
+    # Computes the new t2b score of +expression+, given +new_score+
+    # @param [String] expression The expression whose review number increases
+    # @param [Integer] new_score The latest score, used to update the
+    #   expression's score
+    def new_score_t2b_of(expression, new_score)
+      old_cumulative_score = (expression.score_t2b.to_f * (expression.reviews_t2b.to_f - 1))
+      updated_cumulative_score = (old_cumulative_score + new_score).to_f
+      (updated_cumulative_score / expression.reviews_t2b.to_f).round(2).to_s
+    end
 
     # @return [Array<String>] All expressions of the expression database
     # @example: ['word', 'a sentence', 'another word']

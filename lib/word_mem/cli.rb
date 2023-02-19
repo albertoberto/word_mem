@@ -15,6 +15,14 @@ module WordMem
       true
     end
 
+    desc 'review DIRECTION', 'start the review process of the expression database, using direction DIRECTION'
+    # Starts the review process of the expression database
+    # @param [String] direction Either :b2t (base_language to target_language),
+    #   or t2b (target_language to base_language)
+    def review(direction = 'b2t')
+      direction.to_sym == :b2t ? WordMem::Review::Normal.new.run : WordMem::Review::Reverse.new.run
+    end
+
     desc 'update_tl NEW_LANGUAGE', 'update the target language in the config file to NEW_LANGUAGE'
     # Updates the target language in the config file to +new_language+
     # @param [String] new_language The desired new target language
