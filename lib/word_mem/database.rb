@@ -7,11 +7,17 @@ require_relative '../word_mem'
 
 module WordMem
   # Class that models the project's expression database
-  # @example An expression database
+  # @example The content of the expression database file (an array of arrays)
   #   [
   #      ['word', 0, 0, 0, 0],
   #      ['a sentence', 1, 0, 4, 0],
   #      ['another word', 2, 1, 4, 1]
+  #   ]
+  # @example The content of this class' +@elements+ variable (an array of WordMem::DatabaseElement)
+  #   [
+  #      <WordMem::DatabaseElement @expression='word', @reviews_b2t='0',  ... <and so on> ... >,
+  #      <WordMem::DatabaseElement @expression='a sentence', @reviews_b2t="0", ... <and so on> ... >,
+  #      <WordMem::DatabaseElement @expression='another word', @reviews_b2t=0, ... <and so on> ... >]
   #   ]
   class Database
     # The absolute path to the project's expression database
@@ -25,13 +31,7 @@ module WordMem
     # Appends +db_element+ to the +@elements+ array
     # @param [WordMem::DatabaseElement] db_element The element to be appended
     def append(db_element)
-      elements << [
-        db_element.expression,
-        db_element.reviews_b2t,
-        db_element.reviews_t2b,
-        db_element.score_b2t,
-        db_element.score_t2b
-      ]
+      elements << db_element
     end
 
     # Removes the row for +expression+ from the expression database
@@ -47,12 +47,18 @@ module WordMem
       expressions.include?(expression)
     end
 
-    # @return [Array<Array>] All rows of the expression database
+    # @return [Array<WordMem::DatabaseElement>] All rows of the expression
+    #   database
     def elements
       return @elements if @elements
 
       @elements = []
-      CSV.foreach(DB_FILE) { |db_element| @elements << db_element }
+      CSV.foreach(DB_FILE) do |db_element|
+        @elements << WordMem::DatabaseElement.new(
+          db_element[0], db_element[1], db_element[2], db_element[3], db_element[4]
+        )
+      end
+
       @elements
     end
 
@@ -64,7 +70,7 @@ module WordMem
     # Saves the +@elements+ array in the project's expression database .csv file
     def persist
       CSV.open(DB_FILE, 'w') do |csv|
-        elements.each { |db_element| csv << db_element }
+        elements.each { |db_element| csv << db_element.to_array }
       end
     end
 
@@ -73,7 +79,7 @@ module WordMem
     # @return [Array<String>] All expressions of the expression database
     # @example: ['word', 'a sentence', 'another word']
     def expressions
-      @expressions ||= elements.empty? ? [] : elements.map(&:first)
+      @expressions ||= elements.empty? ? [] : elements.map(&:expression)
     end
 
     # @return [nil] If the project's expression database file is at
