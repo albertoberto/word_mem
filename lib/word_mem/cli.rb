@@ -4,6 +4,7 @@ require 'thor'
 
 require_relative 'database'
 require_relative 'database_element'
+require_relative 'review'
 
 module WordMem
   # Class that models the project's Command Line Interface
@@ -12,6 +13,20 @@ module WordMem
     # an error is raised
     def self.exit_on_failure?
       true
+    end
+
+    desc 'update_tl NEW_LANGUAGE', 'update the target language in the config file to NEW_LANGUAGE'
+    # Updates the target language in the config file to +new_language+
+    # @param [String] new_language The desired new target language
+    def update_tl(new_language)
+      config_manager.update_target_language_to(new_language)
+    end
+
+    desc 'update_bl NEW_LANGUAGE', 'update the base language in the config file to NEW_LANGUAGE'
+    # Updates the base language in the config file to +new_language+
+    # @param [String] new_language The desired new base language
+    def update_bl(new_language)
+      config_manager.update_base_language_to(new_language)
     end
 
     desc 'clear_db', 'remove all elements from the database'
@@ -46,6 +61,11 @@ module WordMem
     end
 
     private
+
+    # @return [WordMem::ConfigManager] Class instance
+    def config_manager
+      @config_manager ||= WordMem::ConfigManager.new
+    end
 
     # @return [WordMem::Database] Class instance
     def db
