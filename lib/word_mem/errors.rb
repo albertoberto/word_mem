@@ -6,5 +6,9 @@ module WordMem
     # Class that models an error to be raised when the project's expression
     # database is not found
     class MissingDatabase < StandardError; end
+
+    # Class that models an error to be raised when a class' method has not been
+    # overwritten by the sub-class' method like it's supposed to
+    class MissingSpecificImplementation < StandardError; end
   end
 end
