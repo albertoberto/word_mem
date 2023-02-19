@@ -3,6 +3,6 @@
 /.config
 /.vscode
 /.yardoc
-/db/
+/config/
 /doc/
 /Gemfile.lock
