@@ -21,7 +21,7 @@ module WordMem
   #   ]
   class Database
     # The absolute path to the project's expression database
-    DB_FILE = File.join(WordMem::PROJECT_ROOT, 'db', 'db.csv').freeze
+    DB_FILE = File.join(WordMem::PROJECT_ROOT, 'config', 'db.csv').freeze
 
     # @see WordMem::Database#validate_db_presence
     def initialize
