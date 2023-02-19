@@ -2,6 +2,7 @@
 
 source 'https://rubygems.org'
 
+gem 'easy_translate'
 gem 'rake'
 gem 'rspec'
 gem 'rubocop'
