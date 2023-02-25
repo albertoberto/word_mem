@@ -19,5 +19,5 @@ end
 
 desc 'Run Yard on all .rb files in lib/'
 task :yard do
-  YARD::Rake::YardocTask.new { sh 'yard doc --list-undoc' }
+  YARD::Rake::YardocTask.new { sh 'yard stats --list-undoc --compact --private --protected' }
 end
