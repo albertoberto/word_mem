@@ -15,9 +15,7 @@ module WordMem
       # Shows the user a random expression from the expressions in the expression
       # database that have still not been shown during the review
       def show_expression
-        @translated_expression = available_elements[
-          rand(available_elements.length)
-        ].expression
+        @translated_expression = WordMem::Review::WeightedExpression.new(available_elements, :reverse).extract
 
         @shown_expression = EasyTranslate.translate(
           @translated_expression, from: target_language, to: base_language

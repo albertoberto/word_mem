@@ -3,6 +3,7 @@
 require 'easy_translate'
 
 require_relative '../config_manager'
+require_relative 'weighted_expression'
 
 module WordMem
   module Review

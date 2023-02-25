@@ -13,7 +13,7 @@ module WordMem
       # Shows the user a random expression from the expressions in the expression
       # database that have still not been shown during the review
       def show_expression
-        @shown_expression = available_elements[rand(available_elements.length)].expression
+        @shown_expression = WordMem::Review::WeightedExpression.new(available_elements, :normal).extract
         puts @shown_expression
       end
 
