@@ -11,3 +11,5 @@ Layout/LineLength:
 Metrics/ParameterLists:
   Max: 5
   MaxOptionalParameters: 5
+Metrics/MethodLength:
+  Max: 15
