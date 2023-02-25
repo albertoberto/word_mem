@@ -29,6 +29,11 @@ module WordMem
       File.write(languages_file, languages.to_yaml)
     end
 
+    # @return [Array<Symbol>] Base and target languages, in this order
+    def language_pair
+      @language_pair ||= [base_language, target_language]
+    end
+
     # @return [Symbol] The target language
     def target_language
       @target_language ||= languages['target_language'].to_sym

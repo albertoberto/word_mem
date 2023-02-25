@@ -23,6 +23,23 @@ module WordMem
       direction.to_sym == :b2t ? WordMem::Review::Normal.new.run : WordMem::Review::Reverse.new.run
     end
 
+    desc 'translate EXPRESSION', <<-DESC
+      translate EXPRESSION from the auto-detected language (must be either language in `config/languages.yaml`)
+      to the other `config/languages.yaml` language
+    DESC
+    # Translates EXPRESSION from the auto-detected language (must be either
+    # language in `config/languages.yaml`) to the other `config/languages.yaml`
+    # language
+    # @param [String] expression The expression to be translated
+    def translate(expression)
+      EasyTranslate.api_key = config_manager.retrieve('google_translate_api_key')
+
+      language = EasyTranslate.detect(expression).to_sym
+      raise UnexpectedLanguage unless config_manager.language_pair.include?(language)
+
+      puts EasyTranslate.translate(expression, from: language, to: other(language))
+    end
+
     desc 'update_tl NEW_LANGUAGE', 'update the target language in the config file to NEW_LANGUAGE'
     # Updates the target language in the config file to +new_language+
     # @param [String] new_language The desired new target language
@@ -76,6 +93,13 @@ module WordMem
     end
 
     private
+
+    # @param [Symbol] language Either base or target language
+    # @return [Symbol] If +language+ is base language, then target language. If
+    #   +language+ is target language, then base language
+    def other(language)
+      config_manager.language_pair.reject { |lang| lang == language }.first
+    end
 
     # @return [WordMem::ConfigManager] Class instance
     def config_manager

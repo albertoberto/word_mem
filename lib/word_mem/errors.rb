@@ -10,5 +10,9 @@ module WordMem
     # Class that models an error to be raised when a class' method has not been
     # overwritten by the sub-class' method like it's supposed to
     class MissingSpecificImplementation < StandardError; end
+
+    # Class that models an error to be raised when a an expression in neither
+    # base nor target language is being used
+    class UnexpectedLanguage < StandardError; end
   end
 end
