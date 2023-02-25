@@ -31,12 +31,12 @@ module WordMem
 
     # @return [Symbol] The target language
     def target_language
-      languages['target_language'].to_sym
+      @target_language ||= languages['target_language'].to_sym
     end
 
     # @return [Symbol] The base language
     def base_language
-      languages['base_language'].to_sym
+      @base_language ||= languages['base_language'].to_sym
     end
 
     private
