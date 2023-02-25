@@ -109,12 +109,12 @@ module WordMem
         @db ||= WordMem::Database.new
       end
 
-      # @return [String] The target language
+      # @return [Symbol] The target language
       def target_language
         @target_language ||= config_manager.target_language
       end
 
-      # @return [String] The base language
+      # @return [Symbol] The base language
       def base_language
         @base_language ||= config_manager.base_language
       end

@@ -29,14 +29,14 @@ module WordMem
       File.write(languages_file, languages.to_yaml)
     end
 
-    # @return [String] The target language
+    # @return [Symbol] The target language
     def target_language
-      languages['target_language']
+      languages['target_language'].to_sym
     end
 
-    # @return [String] The base language
+    # @return [Symbol] The base language
     def base_language
-      languages['base_language']
+      languages['base_language'].to_sym
     end
 
     private
