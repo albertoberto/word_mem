@@ -38,7 +38,7 @@ module WordMem
 
           puts '---'
           update_avalable_elements
-          return if @available_elements.empty?
+          @continue_review = false if @available_elements.empty?
         end
       end
 
