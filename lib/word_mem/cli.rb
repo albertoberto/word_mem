@@ -56,6 +56,15 @@ module WordMem
       config_manager.update_base_language_to(new_language)
     end
 
+    desc 'update_randomness NEW_VALUE', 'change the randomness value of shown words in reviews to NEW_VALUE'
+    # Updates the randomness value of shown expressions in reviews to +new_value+
+    # @param [String] new_value The desired new value
+    def update_randomness(new_value)
+      raise ArgumentError unless valid_percentage?(new_value)
+
+      config_manager.update_randomness_to(new_value)
+    end
+
     desc 'reset_db', 'sets reviews and scores of all elements from the database to 0'
     # Sets reviews and scores of all elements from the database to 0
     def reset_db
@@ -95,6 +104,12 @@ module WordMem
     end
 
     private
+
+    # @param [String] value A value
+    # @return [Boolean] True if the value is a valid percentage, False otherwise
+    def valid_percentage?(value)
+      value.match?(/\d+/) && value.to_i <= 100 && value.to_i >= 0
+    end
 
     # @param [Symbol] language Either base or target language
     # @return [Symbol] If +language+ is base language, then target language. If

@@ -44,7 +44,27 @@ module WordMem
       @base_language ||= languages['base_language'].to_sym
     end
 
+    # Updates the randomness value to +new_value+
+    # @param [String] new_value The new randomness value
+    def update_randomness_to(new_value)
+      options = YAML.load_file(general_file)
+      options['randomness'] = new_value
+      File.write(general_file, options.to_yaml)
+    end
+
+    # @return [String] A percentage representing the randomness value with
+    #   which shown expressions appear in reviews (i.e., any completely random
+    #   one, or some other one according to some specific rule)
+    def randomness
+      options['randomness']
+    end
+
     private
+
+    # @return [Hash] All options: option name as hash key, option as hash value
+    def options
+      @options ||= YAML.load_file(general_file)
+    end
 
     # @return [Hash] All keys: key name as hash key, key as hash value
     def keys
@@ -55,6 +75,11 @@ module WordMem
     #   actual language as hash value
     def languages
       @languages ||= YAML.load_file(languages_file)
+    end
+
+    # @return [String] Path to the config file containing general options
+    def general_file
+      @general_file ||= File.join(WordMem::PROJECT_ROOT, 'config', 'general.yaml')
     end
 
     # @return [String] Path to the config file containing all keys
