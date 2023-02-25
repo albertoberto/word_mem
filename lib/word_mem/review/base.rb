@@ -12,6 +12,9 @@ module WordMem
       # Scores that the user is allowed to give themselves
       ACCEPTABLE_SELF_SCORES = [0, 1, 2, 3, 4].freeze
 
+      # Maximuma number of review iterations
+      DEFAULT_MAX_ITERATIONS = 1_000
+
       attr_reader :friendly_game
 
       # Initializes the class by setting +@continue_review+ to True and setting
@@ -19,9 +22,13 @@ module WordMem
       # @param [Hash] options Review options
       # @option [String] friendly Friendly game where review numbers and scores
       #   don't change
+      # @option [Integer] max_iteration Maximum number of review iterations,
+      #   i.e., words to be shown before stopping
       def initialize(options = {})
         @continue_review = true
+        @iterations = options['max_iterations'] || DEFAULT_MAX_ITERATIONS
         @friendly_game = options['friendly']
+
         EasyTranslate.api_key = config_manager.retrieve('google_translate_api_key')
       end
 
@@ -38,7 +45,8 @@ module WordMem
 
           puts '---'
           update_avalable_elements
-          @continue_review = false if @available_elements.empty?
+          @iterations -= 1
+          @continue_review = false if @available_elements.empty? || @iterations.zero?
         end
       end
 
