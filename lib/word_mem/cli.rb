@@ -16,11 +16,12 @@ module WordMem
     end
 
     desc 'review DIRECTION', 'start the review process of the expression database, using direction DIRECTION'
+    method_option :friendly, type: :boolean, aliases: %w[-f --friendly]
     # Starts the review process of the expression database
     # @param [String] direction Either :b2t (base_language to target_language),
     #   or t2b (target_language to base_language)
     def review(direction = 'b2t')
-      direction.to_sym == :b2t ? WordMem::Review::Normal.new.run : WordMem::Review::Reverse.new.run
+      direction.to_sym == :b2t ? WordMem::Review::Normal.new(options).run : WordMem::Review::Reverse.new(options).run
     end
 
     desc 'translate EXPRESSION', <<-DESC

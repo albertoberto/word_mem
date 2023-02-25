@@ -12,10 +12,16 @@ module WordMem
       # Scores that the user is allowed to give themselves
       ACCEPTABLE_SELF_SCORES = [0, 1, 2, 3, 4].freeze
 
+      attr_reader :friendly_game
+
       # Initializes the class by setting +@continue_review+ to True and setting
       # the google translate API key
-      def initialize
+      # @param [Hash] options Review options
+      # @option [String] friendly Friendly game where review numbers and scores
+      #   don't change
+      def initialize(options = {})
         @continue_review = true
+        @friendly_game = options['friendly']
         EasyTranslate.api_key = config_manager.retrieve('google_translate_api_key')
       end
 
@@ -25,8 +31,12 @@ module WordMem
           show_expression
           wait_for_user_answer
           show_translation
-          score = check_self_evaluation
-          update_shown_element_with(score)
+          unless friendly_game
+            score = check_self_evaluation
+            update_shown_element_with(score)
+          end
+
+          puts '---'
           update_avalable_elements
           return if @available_elements.empty?
         end
@@ -62,7 +72,6 @@ module WordMem
           score = require_user_input.to_i
         end
 
-        puts '---'
         @continue_review = false if score.zero?
         score
       end
