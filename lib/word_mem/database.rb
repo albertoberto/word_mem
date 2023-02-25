@@ -93,6 +93,16 @@ module WordMem
       @elements
     end
 
+    # Sets reviews and scores of all elements in +@elements+ to 0
+    def reset
+      elements.each do |element|
+        element.reviews_b2t = 0
+        element.reviews_t2b = 0
+        element.score_b2t = 0
+        element.score_t2b = 0
+      end
+    end
+
     # Removes all elements from the project's expression database .csv file
     def clear
       CSV.open(DB_FILE, 'w') { |csv| csv }

@@ -23,6 +23,43 @@ RSpec.describe WordMem::CLI do
     cli.clear_db
   end
 
+  describe '#reset_db' do
+    subject(:method_call) { cli.reset_db }
+
+    context 'with a non-empty expression database' do
+      let(:expression) { WordMem::DatabaseElement.new('dummy', 1, 1, 1, 1) }
+      let(:db_element) { WordMem::Database.new.elements.first }
+      let(:element_reset?) do
+        db_element.expression == expression.expression &&
+          db_element.reviews_b2t.to_i.zero? &&
+          db_element.reviews_t2b.to_i.zero? &&
+          db_element.score_b2t.to_i.zero? &&
+          db_element.score_t2b.to_i.zero?
+      end
+
+      before do
+        db = WordMem::Database.new
+        db.append(expression)
+        db.persist
+      end
+
+      after do
+        cli.clear_db
+      end
+
+      it "resets all expressions in the project's expression database" do
+        method_call
+        expect(element_reset?).to be true
+      end
+    end
+
+    context 'with an empty expression database' do
+      it "doesn't raise any error" do
+        expect { method_call }.not_to raise_error
+      end
+    end
+  end
+
   describe '#clear_db' do
     subject(:method_call) { cli.clear_db }
 

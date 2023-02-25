@@ -37,6 +37,13 @@ module WordMem
       config_manager.update_base_language_to(new_language)
     end
 
+    desc 'reset_db', 'sets reviews and scores of all elements from the database to 0'
+    # Sets reviews and scores of all elements from the database to 0
+    def reset_db
+      db.reset
+      db.persist
+    end
+
     desc 'clear_db', 'remove all elements from the database'
     # @see WordMem::Database#clear
     def clear_db
