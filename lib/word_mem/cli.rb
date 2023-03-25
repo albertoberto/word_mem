@@ -5,6 +5,7 @@ require 'thor'
 require_relative 'database'
 require_relative 'database_element'
 require_relative 'review'
+require_relative 'translator'
 
 module WordMem
   # Class that models the project's Command Line Interface
@@ -34,12 +35,10 @@ module WordMem
     # language
     # @param [String] expression The expression to be translated
     def translate(expression)
-      EasyTranslate.api_key = config_manager.retrieve('google_translate_api_key')
-
-      language = EasyTranslate.detect(expression).to_sym
+      language = translator.language_of(expression)
       raise UnexpectedLanguage unless config_manager.language_pair.include?(language)
 
-      puts EasyTranslate.translate(expression, from: language, to: other(language))
+      puts translator.translate(expression)
     end
 
     desc 'update_tl NEW_LANGUAGE', 'update the target language in the config file to NEW_LANGUAGE'
@@ -84,7 +83,7 @@ module WordMem
       expressions.each do |expression|
         next if db.contains?(expression)
 
-        db.append(WordMem::DatabaseElement.new(expression))
+        db.append(WordMem::DatabaseElement.new(expression:))
       end
 
       db.persist
@@ -116,6 +115,11 @@ module WordMem
     #   +language+ is target language, then base language
     def other(language)
       config_manager.language_pair.reject { |lang| lang == language }.first
+    end
+
+    # @return [WordMem::Translator] Class instance
+    def translator
+      @translator ||= WordMem::Translator.new
     end
 
     # @return [WordMem::ConfigManager] Class instance

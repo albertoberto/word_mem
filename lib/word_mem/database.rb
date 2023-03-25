@@ -46,12 +46,12 @@ module WordMem
     #   or t2b (target_language to base_language)
     # @param [Integer] amount The amount by which the review number increases
     def increase_review_number_of(expression, direction, amount = 1)
-      expression = elements.find { |element| element.expression == expression }
-
       if direction == :b2t
-        expression.reviews_b2t = (expression.reviews_b2t.to_i + amount).to_s
+        element = elements.find { |elem| elem.expression == expression }
+        element.reviews_b2t = new_b2t_review_number_of(element, amount)
       else
-        expression.reviews_t2b = (expression.reviews_t2b.to_i + amount).to_s
+        element = elements.find { |elem| elem.translated_expression == expression }
+        element.reviews_t2b = new_t2b_review_number_of(element, amount)
       end
     end
 
@@ -62,12 +62,12 @@ module WordMem
     # @param [Integer] new_score The latest score, used to update the
     #   expression's score
     def update_score_of(expression, direction, new_score)
-      expression = elements.find { |element| element.expression == expression }
-
       if direction == :b2t
-        expression.score_b2t = new_score_b2t_of(expression, new_score)
+        element = elements.find { |elem| elem.expression == expression }
+        element.score_b2t = new_score_b2t_of(element, new_score)
       else
-        expression.score_t2b = new_score_t2b_of(expression, new_score)
+        element = elements.find { |elem| elem.translated_expression == expression }
+        element.score_t2b = new_score_t2b_of(element, new_score)
       end
     end
 
@@ -86,7 +86,12 @@ module WordMem
       @elements = []
       CSV.foreach(DB_FILE) do |db_element|
         @elements << WordMem::DatabaseElement.new(
-          db_element[0], db_element[1], db_element[2], db_element[3], db_element[4]
+          expression: db_element[0],
+          translated_expression: db_element[1],
+          reviews_b2t: db_element[2],
+          reviews_t2b: db_element[3],
+          score_b2t: db_element[4],
+          score_t2b: db_element[5]
         )
       end
 
@@ -115,7 +120,33 @@ module WordMem
       end
     end
 
+    # @param [String] expression The expression to be translated
+    # @param [Boolean] b2t True if the translation is from base to target
+    #  language, false otherwise
+    # @return [String] The translation of the passed +expression+
+    def translation_of(expression, b2t:)
+      if b2t
+        elements.find { |elem| elem.expression == expression }.translated_expression
+      else
+        elements.find { |elem| elem.translated_expression == expression }.expression
+      end
+    end
+
     private
+
+    # @param [String] element The database element whose review number increases
+    # @param [Integer] amount The amount of reviews to increase the number with
+    # @return [String] The new b2t review number of +element+, given +amount+
+    def new_b2t_review_number_of(element, amount)
+      (element.reviews_b2t.to_i + amount).to_s
+    end
+
+    # @param [String] element The database element whose review number increases
+    # @param [Integer] amount The amount of reviews to increase the number with
+    # @return [String] The new t2b review number of +element+, given +amount+
+    def new_t2b_review_number_of(element, amount)
+      (element.reviews_t2b.to_i + amount).to_s
+    end
 
     # Computes the new b2t score of +expression+, given +new_score+
     # @param [String] expression The expression whose review number increases

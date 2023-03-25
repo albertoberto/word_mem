@@ -27,7 +27,6 @@ RSpec.describe WordMem::CLI do
     subject(:method_call) { cli.reset_db }
 
     context 'with a non-empty expression database' do
-      let(:expression) { WordMem::DatabaseElement.new('dummy', 1, 1, 1, 1) }
       let(:db_element) { WordMem::Database.new.elements.first }
       let(:element_reset?) do
         db_element.expression == expression.expression &&
@@ -35,6 +34,16 @@ RSpec.describe WordMem::CLI do
           db_element.reviews_t2b.to_i.zero? &&
           db_element.score_b2t.to_i.zero? &&
           db_element.score_t2b.to_i.zero?
+      end
+
+      let(:expression) do
+        WordMem::DatabaseElement.new(
+          expression: 'dummy',
+          reviews_b2t: 1,
+          reviews_t2b: 1,
+          score_b2t: 1,
+          score_t2b: 1
+        )
       end
 
       before do

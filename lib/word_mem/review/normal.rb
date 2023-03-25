@@ -13,32 +13,33 @@ module WordMem
       # Shows the user a random expression from the expressions in the expression
       # database that have still not been shown during the review
       def show_expression
-        @shown_expression = WordMem::Review::WeightedExpression.new(available_elements, :normal).extract
-        puts @shown_expression
+        @expression = @db_element.expression
+        puts @expression
       end
 
       # @return [String] The translation of the shown expression
-      def translated_expression
-        @translated_expression = EasyTranslate.translate(
-          @shown_expression, from: target_language, to: base_language
-        )
+      def show_translation
+        @translated_expression = @db_element.translated_expression
+        puts @translated_expression
       end
 
-      # Updates the expression database for +@shown_expression+, if the self-score
+      # Updates the expression database for +@expression+, if the self-score
       # is not 0
       # @param [Integer] score The self-score to update the shown element with
       def update_shown_element_with(score)
         return if score.zero?
 
-        db.increase_review_number_of(@shown_expression, :b2t)
-        db.update_score_of(@shown_expression, :b2t, score)
+        db.increase_review_number_of(@expression, :b2t)
+        db.update_score_of(@expression, :b2t, score)
         db.persist
       end
 
       # Updates the list of elements that can be shown in the next iteration of
       # the review loop
       def update_avalable_elements
-        @available_elements -= [db.elements.find { |element| element.expression == @shown_expression }]
+        @available_elements -= [
+          db.elements.find { |element| element.expression == @expression }
+        ]
       end
     end
   end

@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'easy_translate'
-
-require_relative '../config_manager'
 require_relative 'weighted_expression'
 
 module WordMem
@@ -28,13 +25,12 @@ module WordMem
         @continue_review = true
         @iterations = options['max_iterations'] || DEFAULT_MAX_ITERATIONS
         @friendly_game = options['friendly']
-
-        EasyTranslate.api_key = config_manager.retrieve('google_translate_api_key')
       end
 
       # Runs the review process
       def run
         while @continue_review
+          choose_db_element
           show_expression
           wait_for_user_answer
           show_translation
@@ -52,6 +48,11 @@ module WordMem
 
       private
 
+      # Sets instance variable +db_element+
+      def choose_db_element
+        @db_element = WordMem::Review::WeightedExpression.new(available_elements, :normal).extract
+      end
+
       # @raise [MissingSpecificImplementation] When the method has not been
       #   overwritten by the corresponding sub-class' method
       def show_expression
@@ -65,9 +66,10 @@ module WordMem
         require_user_input
       end
 
-      # Shows the translation of +@shown_expression+
+      # @raise [MissingSpecificImplementation] When the method has not been
+      #   overwritten by the corresponding sub-class' method
       def show_translation
-        puts translated_expression
+        raise MissingSpecificImplementation, 'Missing specific implementation of `WordMem::Review#show_expression`'
       end
 
       # Asks the user for a self-evaluation about the translation, and sets
@@ -125,21 +127,6 @@ module WordMem
       # @return [WordMem::Database] Class instance
       def db
         @db ||= WordMem::Database.new
-      end
-
-      # @return [Symbol] The target language
-      def target_language
-        @target_language ||= config_manager.target_language
-      end
-
-      # @return [Symbol] The base language
-      def base_language
-        @base_language ||= config_manager.base_language
-      end
-
-      # @return [WordMem::ConfigManager] Class instance
-      def config_manager
-        @config_manager ||= WordMem::ConfigManager.new
       end
     end
   end

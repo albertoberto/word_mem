@@ -32,32 +32,25 @@ module WordMem
       #   +@available_elements+ with either the lowest number of reviews, or the
       #   lowest score, randomly
       def least_reviewed_or_lowest_score
-        [
-          least_reviewed_element,
-          lowest_score_element
-        ].sample.expression
+        [least_reviewed_element, lowest_score_element].sample
       end
 
       # @return [WordMem::DatabaseElement] The element from
       #   +@available_elements+ with the lowest number of reviews
       def least_reviewed_element
-        available_elements.sort_by! do |element|
-          normal_review ? element.reviews_b2t : element.reviews_t2b
-        end.first
+        available_elements.sort_by! { |element| normal_review ? element.reviews_b2t : element.reviews_t2b }.first
       end
 
       # @return [WordMem::DatabaseElement] The element from
       #   +@available_elements+ with the lowest score
       def lowest_score_element
-        available_elements.sort_by! do |element|
-          normal_review ? element.score_b2t : element.score_t2b
-        end.first
+        available_elements.sort_by! { |element| normal_review ? element.score_b2t : element.score_t2b }.first
       end
 
       # @return [WordMem::DatabaseElement] A random element from
       #   +@available_elements+
       def random_element
-        available_elements[rand(available_elements.length)].expression
+        available_elements[rand(available_elements.length)]
       end
 
       # @return [Boolean] Randomly True or False, depending on

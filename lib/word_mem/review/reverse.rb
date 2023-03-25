@@ -10,21 +10,20 @@ module WordMem
     class Reverse < WordMem::Review::Base
       private
 
-      attr_reader :translated_expression
-
       # Shows the user a random expression from the expressions in the expression
       # database that have still not been shown during the review
       def show_expression
-        @translated_expression = WordMem::Review::WeightedExpression.new(available_elements, :reverse).extract
-
-        @shown_expression = EasyTranslate.translate(
-          @translated_expression, from: target_language, to: base_language
-        )
-
-        puts @shown_expression
+        @translated_expression = @db_element.translated_expression
+        puts @translated_expression
       end
 
-      # Updates the expression database for +@shown_expression+, if the self-score
+      # @return [String] The translation of the shown expression
+      def show_translation
+        @expression = @db_element.expression
+        puts @expression
+      end
+
+      # Updates the expression database for +@expression+, if the self-score
       # is not 0
       # @param [Integer] score The self-score to update the shown element with
       def update_shown_element_with(score)
@@ -38,7 +37,9 @@ module WordMem
       # Updates the list of elements that can be shown in the next iteration of
       # the review loop
       def update_avalable_elements
-        @available_elements -= [db.elements.find { |element| element.expression == @translated_expression }]
+        @available_elements -= [
+          db.elements.find { |element| element.translated_expression == @translated_expression }
+        ]
       end
     end
   end
