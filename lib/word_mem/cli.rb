@@ -77,6 +77,15 @@ module WordMem
       db.clear
     end
 
+    desc 'db', 'shows all elements in the database'
+    # Prints to STDOUT all elements of the expression database
+    def db_elements
+      maximum_length = longest_element_length
+      db.elements.each do |element|
+        puts "#{element.expression.rjust(maximum_length)}  -  #{element.translated_expression}"
+      end
+    end
+
     desc 'add EXPRESSION', 'add EXPRESSION to the database'
     # Appends a row for +expression+ to the project's expression database file
     def add(*expressions)
@@ -103,6 +112,18 @@ module WordMem
     end
 
     private
+
+    # @return [Integer] Length of the longest element in the list of expressions and translated
+    #   expressions in the expression database 
+    def longest_element_length
+      maximum_length = 0
+      db.elements.each do |element|
+        longer_element = [element.expression.length, element.translated_expression.length].max
+        maximum_length = longer_element if longer_element > maximum_length
+      end
+
+      maximum_length
+    end
 
     # @param [String] value A value
     # @return [Boolean] True if the value is a valid percentage, False otherwise
