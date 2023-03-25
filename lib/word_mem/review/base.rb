@@ -9,7 +9,7 @@ module WordMem
       # Scores that the user is allowed to give themselves
       ACCEPTABLE_SELF_SCORES = [0, 1, 2, 3, 4].freeze
 
-      # Maximuma number of review iterations
+      # Maximum number of review iterations
       DEFAULT_MAX_ITERATIONS = 1_000
 
       attr_reader :friendly_game

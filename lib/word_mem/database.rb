@@ -148,24 +148,24 @@ module WordMem
       (element.reviews_t2b.to_i + amount).to_s
     end
 
-    # Computes the new b2t score of +expression+, given +new_score+
-    # @param [String] expression The expression whose review number increases
+    # @param [String] element The element whose review number increases
     # @param [Integer] new_score The latest score, used to update the
-    #   expression's score
-    def new_score_b2t_of(expression, new_score)
-      old_cumulative_score = (expression.score_b2t.to_f * (expression.reviews_b2t.to_f - 1))
+    #   element's score
+    # @return [String] The new b2t score of +element+, given +new_score+
+    def new_score_b2t_of(element, new_score)
+      old_cumulative_score = (element.score_b2t.to_f * (element.reviews_b2t.to_f - 1))
       updated_cumulative_score = (old_cumulative_score + new_score).to_f
-      (updated_cumulative_score / expression.reviews_b2t.to_f).round(2).to_s
+      (updated_cumulative_score / element.reviews_b2t.to_f).round(2).to_s
     end
 
-    # Computes the new t2b score of +expression+, given +new_score+
-    # @param [String] expression The expression whose review number increases
+    # @param [String] element The element whose review number increases
     # @param [Integer] new_score The latest score, used to update the
-    #   expression's score
-    def new_score_t2b_of(expression, new_score)
-      old_cumulative_score = (expression.score_t2b.to_f * (expression.reviews_t2b.to_f - 1))
+    #   element's score
+    # @return [String] The new t2b score of +element+, given +new_score+
+    def new_score_t2b_of(element, new_score)
+      old_cumulative_score = (element.score_t2b.to_f * (element.reviews_t2b.to_f - 1))
       updated_cumulative_score = (old_cumulative_score + new_score).to_f
-      (updated_cumulative_score / expression.reviews_t2b.to_f).round(2).to_s
+      (updated_cumulative_score / element.reviews_t2b.to_f).round(2).to_s
     end
 
     # @return [Array<String>] All expressions of the expression database
