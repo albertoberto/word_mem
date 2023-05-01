@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require_relative '../lib/word_mem/cli'
+$LOAD_PATH.unshift File.join(__dir__, '..', 'lib')
+
+require 'word_mem/cli'
 
 WordMem::CLI.start(ARGV)
