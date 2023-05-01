@@ -114,7 +114,7 @@ module WordMem
     private
 
     # @return [Integer] Length of the longest element in the list of expressions and translated
-    #   expressions in the expression database 
+    #   expressions in the expression database
     def longest_element_length
       maximum_length = 0
       db.elements.each do |element|
